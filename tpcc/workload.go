@@ -233,17 +233,13 @@ func (w *Workloader) Run(ctx context.Context, threadID int) error {
 			newOrderSelectCustomer: prepareStmt(ctx, s.Conn, newOrderSelectCustomer),
 			newOrderSelectDistrict: prepareStmt(ctx, s.Conn, newOrderSelectDistrict),
 			newOrderUpdateDistrict: prepareStmt(ctx, s.Conn, newOrderUpdateDistrict),
-			newOrderInsertOrder:    prepareStmt(ctx, s.Conn, newOrderInsertOrder),
-			newOrderInsertNewOrder: prepareStmt(ctx, s.Conn, newOrderInsertNewOrder),
 			// batch select items
 			// batch select stock for update
 			newOrderUpdateStock: prepareStmt(ctx, s.Conn, newOrderUpdateStock),
-			// batch insert order_line
 		}
 		for i := 5; i <= 15; i++ {
 			s.newOrderStmts[newOrderSelectItemSQLs[i]] = prepareStmt(ctx, s.Conn, newOrderSelectItemSQLs[i])
 			s.newOrderStmts[newOrderSelectStockSQLs[i]] = prepareStmt(ctx, s.Conn, newOrderSelectStockSQLs[i])
-			s.newOrderStmts[newOrderInsertOrderLineSQLs[i]] = prepareStmt(ctx, s.Conn, newOrderInsertOrderLineSQLs[i])
 		}
 
 		s.paymentStmts = map[string]*sql.Stmt{
@@ -256,7 +252,6 @@ func (w *Workloader) Run(ctx context.Context, threadID int) error {
 			paymentSelectCustomerData:       prepareStmt(ctx, s.Conn, paymentSelectCustomerData),
 			paymentUpdateCustomerWithData:   prepareStmt(ctx, s.Conn, paymentUpdateCustomerWithData),
 			paymentUpdateCustomer:           prepareStmt(ctx, s.Conn, paymentUpdateCustomer),
-			paymentInsertHistory:            prepareStmt(ctx, s.Conn, paymentInsertHistory),
 		}
 
 		s.orderStatusStmts = map[string]*sql.Stmt{

@@ -20,8 +20,6 @@ c_payment_cnt = c_payment_cnt + 1 WHERE c_w_id = ? AND c_d_id = ? AND c_id = ?`
 	paymentSelectCustomerData     = `SELECT c_data FROM customer WHERE c_w_id = ? AND c_d_id = ? AND c_id = ?`
 	paymentUpdateCustomerWithData = `UPDATE customer SET c_balance = c_balance - ?, c_ytd_payment = c_ytd_payment + ?, 
 c_payment_cnt = c_payment_cnt + 1, c_data = ? WHERE c_w_id = ? AND c_d_id = ? AND c_id = ?`
-	paymentInsertHistory = `INSERT INTO history (h_c_d_id, h_c_w_id, h_c_id, h_d_id, h_w_id, h_date, h_amount, h_data)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
 )
 
 type paymentData struct {
@@ -169,10 +167,6 @@ func (w *Workloader) runPayment(ctx context.Context, thread int) error {
 	}
 
 	// Process 10
-	hData := fmt.Sprintf("%10s    %10s", d.wName, d.dName)
-	if _, err := s.paymentStmts[paymentInsertHistory].ExecContext(ctx, d.cDID, d.cWID, d.cID, d.dID, d.wID, time.Now().Format(timeFormat), d.hAmount, hData); err != nil {
-		return fmt.Errorf("exec %s failed %v", paymentInsertHistory, err)
-	}
 
 	return tx.Commit()
 }
